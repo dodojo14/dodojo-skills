@@ -8,7 +8,9 @@
   gutter, one column at phone width, rows that wrap, `min-width: 0` on flex and
   grid children that hold text, `max-width: 100%` on images. Nothing scrolls
   sideways except a wide table or diagram inside its own `overflow-x: auto`
-  box. Use relative units.
+  box, and a layer moved with `transform` counts: a full-width layer slid
+  right widens the page as surely as content does, so move a marker with
+  `left` or `right` on a small box. Use relative units.
 - **Type.** A set scale kept to; `text-wrap: balance` on headings; running text
   near 65 characters wide on a computer; 16px body on a phone; a little
   letter-spacing on uppercase labels; `font-variant-numeric: tabular-nums`

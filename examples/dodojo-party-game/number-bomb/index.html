@@ -162,7 +162,8 @@ button { font-family: inherit; }
 .burn { position: absolute; inset: 0; transition: transform .55s cubic-bezier(.3, .7, .2, 1);
   background: radial-gradient(circle at 20% 40%, rgba(255, 120, 60, .25) 0 1px, transparent 1.5px) 0 0 / 9px 6px, var(--char); }
 .burn.l { transform-origin: left center; } .burn.r { transform-origin: right center; }
-.sparkw { position: absolute; left: 0; right: 0; top: 10px; height: 8px; transition: transform .55s cubic-bezier(.3, .7, .2, 1); pointer-events: none; }
+.sparkw { position: absolute; top: 10px; width: 0; height: 8px; transition: left .55s cubic-bezier(.3, .7, .2, 1), right .55s cubic-bezier(.3, .7, .2, 1); pointer-events: none; }
+.sparkw.l { left: 0; } .sparkw.r { right: 0; }
 .sparkw::before { content: ""; position: absolute; top: -2px; width: 12px; height: 12px; border-radius: 50%;
   background: radial-gradient(circle, #fff6c4 0 18%, #ffb238 34%, rgba(255, 90, 40, .55) 55%, transparent 70%);
   animation: flicker .35s infinite alternate; }
@@ -916,8 +917,8 @@ details > div { padding-top: 10px; display: grid; gap: 10px; }
     const fl = R.done ? 1 : (R.lo - 1) / max, fr = R.done ? 0 : (max - R.hi) / max;
     $("burnL").style.transform = `scaleX(${fl})`;
     $("burnR").style.transform = `scaleX(${fr})`;
-    $("sparkL").style.transform = `translateX(${fl * 100}%)`;
-    $("sparkR").style.transform = `translateX(${-fr * 100}%)`;
+    $("sparkL").style.left = `${fl * 100}%`;
+    $("sparkR").style.right = `${fr * 100}%`;
     $("sparkL").classList.toggle("off", R.done || fl === 0);
     $("sparkR").classList.toggle("off", R.done || fr === 0);
     $("marks").innerHTML = g.map(([s, v]) => `<span class="mk${v === R.bomb ? " x" : ""}" style="left:${((v - 0.5) / max) * 100}%;--c:${COLORS[s]}"></span>`).join("");
