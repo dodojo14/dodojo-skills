@@ -1,6 +1,6 @@
 ---
 name: dodojo-party-game
-description: Make a party game for a group of two to ten people in one room, as one webpage - a guessing, drawing, bluffing, push-your-luck, reflex, voting or truth-or-dare game, with one phone passed around, laid in the middle of the table or held up, or each player on their own phone in a dodojo team space - readable from across the table, with secrets that stay hidden when the phone changes hands, a clock people hear, a tally across the evening and prompts written natively for each language - saved into dodojo as a webpage Note, or as a standalone .html file. Use for 聚会游戏, 派对游戏, 团建, 酒桌游戏, 家庭游戏, 你画我猜, 比划猜词, 真心话大冒险, 谁是卧底 and any game for a group.
+description: Make a party game for a group of two to ten people in one room, as one webpage - a guessing, drawing, bluffing, push-your-luck, reflex, voting or truth-or-dare game, with one phone passed around, laid in the middle of the table or held up, or each player on their own phone in a dodojo team space or game room - readable from across the table, with secrets that stay hidden when the phone changes hands, a clock people hear, a tally across the evening and prompts written natively for each language - saved into dodojo as a webpage Note, or as a standalone .html file. Use for 聚会游戏, 派对游戏, 团建, 酒桌游戏, 家庭游戏, 你画我猜, 比划猜词, 真心话大冒险, 谁是卧底 and any game for a group.
 license: MIT
 ---
 
@@ -45,9 +45,11 @@ on any of their devices. Outside dodojo the same file opens in any browser.
   - *Read by a host*: one person runs the game and reads aloud (a quiz night,
     the narrator of a hidden-role game).
   - *On everyone's own phone*: only when the Note is in a dodojo team space,
-    where the page's state is shared live and `dodojo.game` keeps seats and
-    turns ([references/frame.md](references/frame.md)). Elsewhere one device
-    plays every seat; say so in one line if the person asked for online play.
+    or opened as a game room that friends join by typing its code in the
+    dodojo app, where the page's state is shared live and `dodojo.game`
+    keeps seats and turns, with `min` for however many come
+    ([references/frame.md](references/frame.md)). Elsewhere one device plays
+    every seat; say so in one line if the person asked for online play.
 - **How long.** Rounds of one to five minutes, an evening of fifteen to sixty.
   Anyone who waits more than about two minutes for a turn needs a part
   meanwhile: guessing, judging, timing, voting.
@@ -208,9 +210,9 @@ played: about 700px tall on a phone. From the top:
   survives a phone that locks, a reload or a switch to another app.
 - A secret in progress (the bomb's number, the roles) is kept too, so a
   reload never reshuffles: keep the seed and the position in the deck.
-- In a team space with everyone on their own phone, use `dodojo.game` for
-  seats, turns and rounds. The page's state is readable by everyone in the
-  team, so a secret kept there is hidden from the screen, not from someone
+- In a team space or a game room with everyone on their own phone, use
+  `dodojo.game` for seats, turns and rounds. The page's state is readable by
+  everyone playing, so a secret kept there is hidden from the screen, not from someone
   determined: honest enough for a party, not for stakes, and the rules say so.
 - Outside dodojo keep everything in memory and carry on.
 

@@ -186,8 +186,9 @@ button { font-family: inherit; }
 .ti .lamp { width: 16px; height: 16px; font-size: 10px; box-shadow: inset 0 -1px 2px rgba(0, 0, 0, .25), 0 0 0 1px rgba(0, 0, 0, .3); }
 .ti.boom { color: #c4301a; }
 
-.padwrap { position: relative; }
-.done .pad { visibility: hidden; }
+.padwrap { position: relative; display: grid; grid-template-columns: minmax(0, 1fr); }
+.padwrap > .pad, .padwrap > .layer { grid-area: 1 / 1; min-width: 0; }
+.done .pad, .lobby-on .pad { visibility: hidden; }
 .pad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; touch-action: manipulation; }
 .k { height: 46px; border: 0; border-radius: 10px; cursor: pointer; -webkit-tap-highlight-color: transparent;
   font: 750 24px/1 var(--font); color: var(--key-ink); font-variant-numeric: tabular-nums;
@@ -218,6 +219,38 @@ button { font-family: inherit; }
 :lang(zh) .dare p, :lang(ja) .dare p { line-break: strict; }
 .dare button { grid-column: 2; grid-row: 1; height: 34px; margin: 0 -2px 0 0; padding: 0 12px; border-radius: 8px; border: 1px solid rgba(0, 0, 0, .2); background: #fffaf0; color: var(--tape-ink); font-size: 13px; font-weight: 750; cursor: pointer; white-space: nowrap; }
 
+/* everyone on their own phone: who has sat down, and the keypad of whoever is not calling */
+.layer { position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px;
+  padding: 12px; border-radius: 10px; text-align: center; color: var(--stamp);
+  background: linear-gradient(180deg, #12130c, #1a1b12); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .07), inset 0 3px 0 #f2c200; }
+.layer > * { flex: 0 0 auto; max-width: 100%; }
+.layer.wait { background: rgba(18, 19, 12, .87); }
+.ltitle { font-family: var(--stencil); font-size: 21px; font-weight: 400; line-height: 1.1; letter-spacing: .06em; color: #ffd84a; }
+:lang(zh) .ltitle, :lang(ja) .ltitle { font-size: 19px; font-weight: 900; letter-spacing: .08em; }
+.roster { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; min-height: 28px; }
+.chip { display: inline-flex; align-items: center; gap: 5px; max-width: 100%; height: 28px; padding: 0 9px 0 5px; border-radius: 999px;
+  background: rgba(255, 255, 255, .08); color: #fbf8e4; font-size: 14px; font-weight: 700; white-space: nowrap; }
+.chip .lamp { width: 18px; height: 18px; font-size: 10px; }
+.chip .nm { min-width: 0; max-width: 7.5em; overflow: hidden; text-overflow: ellipsis; }
+.chip small { font-size: 11px; font-weight: 800; color: #ffd84a; }
+.chip.me { box-shadow: inset 0 0 0 1.5px #f2c200; }
+.roster .none { font-size: 13px; font-weight: 600; color: rgba(226, 223, 186, .7); line-height: 28px; }
+.lbtn { height: 44px; min-width: 180px; padding: 0 18px; border: 0; border-radius: 12px; background: var(--accent); color: var(--accent-ink);
+  font: 800 16px/1 var(--font); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; cursor: pointer; box-shadow: 0 3px 0 #8f7300; }
+.lbtn:active { transform: translateY(2px); box-shadow: 0 1px 0 #8f7300; }
+.lbtn:focus-visible, .wbtns button:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+.lhint { margin: 0; font-size: 13px; line-height: 1.4; font-weight: 600; color: rgba(226, 223, 186, .82); text-wrap: balance; }
+.wline1 { display: flex; align-items: center; justify-content: center; gap: 8px; min-width: 0; font-size: 19px; line-height: 1.3; font-weight: 800; color: #fbf8e4; }
+.wline1 span:last-child { min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+:lang(zh) .wline1, :lang(ja) .wline1 { font-size: 18px; }
+.wline2 { margin: 0; font-size: 13px; line-height: 1.4; font-weight: 650; color: var(--stamp); }
+.wline2.you { color: #ffd84a; }
+.wline2.ask { font-size: 16px; font-weight: 750; color: #fbf8e4; text-wrap: balance; }
+.wbtns { display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; }
+.wbtns button { height: 40px; padding: 0 14px; border-radius: 10px; border: 1px solid rgba(0, 0, 0, .2); background: #fffaf0; color: var(--tape-ink);
+  font: 750 14px/1 var(--font); white-space: nowrap; cursor: pointer; }
+.wbtns button.yes { background: var(--accent); color: var(--accent-ink); border-color: transparent; }
+
 .flash { position: absolute; inset: 0; border-radius: 18px; background: #fff3c9; opacity: 0; pointer-events: none; }
 .device.boom .flash { animation: flash .55s ease-out; }
 .device.boom .case { animation: shake .5s cubic-bezier(.36, .07, .19, .97); }
@@ -237,6 +270,10 @@ button { font-family: inherit; }
 #newBtn { flex: 0 0 104px; padding: 0 8px; }
 #newBtn.primary { background: var(--accent); color: var(--accent-ink); border-color: transparent; }
 #newBtn.arm { background: var(--danger); color: #fff; border-color: transparent; }
+.btn:disabled { opacity: .5; cursor: default; }
+.shared #newBtn { flex: 1 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+.shared #leaveBtn { flex: 0 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; color: var(--soft); }
+.shared #soundBtn { margin-left: auto; }
 .stepper { flex: 1; display: flex; align-items: center; min-width: 0; border: 1px solid var(--line); border-radius: 12px; background: var(--panel); }
 .stepper button { flex: 0 0 44px; height: 42px; border: 0; background: transparent; color: var(--ink); font: 700 22px/1 var(--font); cursor: pointer; border-radius: 11px; }
 .stepper button:disabled { opacity: .3; cursor: default; }
@@ -269,6 +306,10 @@ h2 small { font-size: 13px; font-weight: 500; color: var(--soft); white-space: n
 .board .cnt { font-variant-numeric: tabular-nums; color: var(--soft); white-space: nowrap; font-size: 14px; }
 .board .tag { font-size: 12px; color: var(--danger); font-weight: 700; margin-left: 4px; }
 .board .row-btn { margin-top: 10px; height: 36px; font-size: 13px; padding: 0 12px; }
+.board li.me .nm { text-decoration: underline 2px var(--accent); text-underline-offset: 3px; }
+.seg-ctl:has(input:disabled) { opacity: .55; }
+.seg-ctl label:has(input:disabled), .seg-ctl input:disabled, .check:has(input:disabled) { cursor: default; }
+.check:has(input:disabled) { opacity: .55; }
 details { border-top: 1px solid var(--line); padding-top: 12px; }
 summary { cursor: pointer; font-weight: 750; font-size: 15px; min-height: 32px; display: flex; align-items: center; }
 details > div { padding-top: 10px; display: grid; gap: 10px; }
@@ -337,6 +378,17 @@ details > div { padding-top: 10px; display: grid; gap: 10px; }
             <div class="line2" id="bLine2">1st boom tonight · P1 starts next</div>
             <div class="dare" id="dare"><small data-i18n="forfeit">Forfeit</small><p id="dareText"></p><button id="dareNext" type="button" data-i18n="swap">Swap</button></div>
           </div>
+          <div class="layer lobby" id="lobby" hidden>
+            <div class="ltitle" data-i18n="lobbyTitle">Who's playing?</div>
+            <div class="roster" id="roster"></div>
+            <button class="lbtn" id="lobbyBtn" type="button">Join this round</button>
+            <p class="lhint" id="lobbyHint"></p>
+          </div>
+          <div class="layer wait" id="wait" hidden>
+            <div class="wline1" id="waitLine1"></div>
+            <p class="wline2" id="waitLine2"></p>
+            <div class="wbtns" id="waitBtns"><button class="yes" id="askYes" type="button">Start over</button><button id="askNo" type="button">Keep playing</button></div>
+          </div>
         </div>
       </div>
       <div class="flash" id="flash"></div>
@@ -349,6 +401,7 @@ details > div { padding-top: 10px; display: grid; gap: 10px; }
         <output id="count" aria-live="polite"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="9" cy="8" r="3.2"/><path d="M3.5 19.5c.6-3.3 2.8-5.2 5.5-5.2s4.9 1.9 5.5 5.2"/><circle cx="17" cy="9" r="2.6"/><path d="M16.3 14.3c2.3-.1 4 1.5 4.4 4.6"/></svg><span id="countNum">4</span><span class="sr" id="countWord">players</span></output>
         <button id="plus" type="button" aria-label="One more player" data-i18n-aria="more">+</button>
       </div>
+      <button class="btn" id="leaveBtn" type="button" hidden>Leave seat</button>
       <button class="btn icon" id="soundBtn" type="button" aria-pressed="true" aria-label="Sound on">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9.5h3.5L12 5.5v13l-4.5-4H4z" fill="currentColor" stroke-width="1.6"/><g class="waves"><path d="M15.5 9.2a4 4 0 0 1 0 5.6"/><path d="M18.2 6.6a7.6 7.6 0 0 1 0 10.8"/></g><g class="mute"><path d="M16 9.5l5 5M21 9.5l-5 5"/></g></svg>
       </button>
@@ -362,7 +415,7 @@ details > div { padding-top: 10px; display: grid; gap: 10px; }
       <button type="button" lang="ja" data-lang="ja" aria-pressed="false">日本語</button>
     </div>
 
-    <p class="howto" data-i18n-html="howto">Take turns calling a number inside the <b>range</b>. Miss, and the range shrinks toward the bomb; <b>whoever hits the bomb loses</b> and starts the next round. Pass the phone along, or leave it in the middle of the table.</p>
+    <p class="howto" id="howto" data-i18n-html="howto">Take turns calling a number inside the <b>range</b>. Miss, and the range shrinks toward the bomb; <b>whoever hits the bomb loses</b> and starts the next round. Pass the phone along, or leave it in the middle of the table.</p>
 
     <section class="board" aria-label="Tonight's tally" data-i18n-aria="board">
       <h2><span data-i18n="board">Tonight's tally</span> <small id="roundsInfo">No booms yet</small></h2>
@@ -404,7 +457,7 @@ details > div { padding-top: 10px; display: grid; gap: 10px; }
           <li><b>Tally:</b> the game counts how many times each player blew up tonight. "Reset tally" clears it.</li>
           <li><b>Tip:</b> while the range is wide, numbers near the edges are safer; with three or four left, the pressure passes to the next player.</li>
         </ol>
-        <p class="note" data-i18n="rulesNote">Close it halfway through and it opens on the same call next time. Each round's bomb comes from a random seed saved with the round.</p>
+        <p class="note" id="rulesNote" data-i18n="rulesNote">Close it halfway through and it opens on the same call next time. Each round's bomb comes from a random seed saved with the round.</p>
       </div>
     </details>
   </aside>
@@ -467,6 +520,32 @@ details > div { padding-top: 10px; display: grid; gap: 10px; }
         ["Tip:", "while the range is wide, numbers near the edges are safer; with three or four left, the pressure passes to the next player."]
       ],
       rulesNote: "Close it halfway through and it opens on the same call next time. Each round's bomb comes from a random seed saved with the round.",
+      // everyone on their own phone
+      you: "you", turnYou: "Your turn", upNow: "Up now",
+      seatedLbl: "Seated", seatedOf: k => `${k} of 8`,
+      lobbyTitle: "Who's playing?", lobbyNone: "Nobody has sat down yet",
+      join: "Join this round", joinNext: "Join next round", joinQueued: "✓ In next round",
+      startN: k => `Start · ${k} players`,
+      hintJoin: "Up to 8 players. Or just watch.",
+      hintNeedOne: "Waiting for one more player…",
+      hintNeedOneRound: "The round starts as soon as one more player sits down.",
+      hintStart: "Anyone seated can start. Others can still join until then.",
+      hintFull: "All 8 seats are taken.",
+      watching: "You're watching", waitFor: nm => `Waiting for ${nm} to call…`, youNext: "You're next",
+      queuedNote: "You'll sit in when this round ends.",
+      msgOneThem: (nm, lo) => `One left… ${nm} has to call ${lo}`,
+      msgLobby: (lo, hi) => `Once you start, the bomb hides in ${lo}–${hi}`,
+      nextRound: "Next round", needTwo: "Needs 2 players", full: "Seats full", leave: "Leave seat",
+      restartAsk: nm => `${nm} wants to start this round over`,
+      restartYes: "Start over", restartNo: "Keep playing",
+      restartMine: "You asked to start over. Waiting for someone to agree.", restartCancel: "Take it back",
+      howtoShared: "Everyone plays on their own phone. Take turns calling a number inside the <b>range</b>; only the phone whose turn it is can call. Miss, and the range shrinks toward the bomb; <b>whoever hits the bomb loses</b> and starts the next round.",
+      setShared: "Anyone seated can change these between rounds. They apply from the next round.",
+      setLocked: "Locked while a round is on. Change them between rounds.",
+      setWatch: "Only seated players can change these.",
+      rangeNext: x => `Next round: 1–${x}.`,
+      rulesShared0: ["Players:", "2–8, each on their own phone. Tap Join, then anyone seated taps Start. Turns go in the order people sat down; the lit lamp shows whose turn it is."],
+      rulesNoteShared: "The bomb never shows on any screen, but it travels with the shared game data: fair enough for a party, not for stakes. Closing the app keeps your seat.",
       dares: [
         "Say \"I'm totally fine\" in three different voices.",
         "Make an animal noise. Everyone guesses the animal.",
@@ -539,6 +618,31 @@ details > div { padding-top: 10px; display: grid; gap: 10px; }
         ["小技巧：", "范围大的时候报靠边的数更稳；剩三四个数时，压力就传给了下一位。"]
       ],
       rulesNote: "玩到一半关掉也没关系，下次打开还在同一步。每局的炸弹由一个随机种子决定，种子跟着这局一起存下。",
+      you: "你", turnYou: "轮到你了", upNow: "正在报",
+      seatedLbl: "已入座", seatedOf: k => `${k} / 8 人`,
+      lobbyTitle: "谁来玩？", lobbyNone: "还没有人入座",
+      join: "加入这一局", joinNext: "下一局加入", joinQueued: "✓ 下一局算你一个",
+      startN: k => `开始 · ${k} 人`,
+      hintJoin: "最多 8 人，也可以只在旁边看。",
+      hintNeedOne: "再等一位玩家入座……",
+      hintNeedOneRound: "再有一位玩家入座，这局就开始。",
+      hintStart: "入座的人谁都能点开始，开始前其他人还能加入。",
+      hintFull: "8 个座位都坐满了。",
+      watching: "你在旁观", waitFor: nm => `等 ${nm} 报数……`, youNext: "下一个就是你",
+      queuedNote: "这局结束后，你就入座。",
+      msgOneThem: (nm, lo) => `只剩一个数了……${nm} 只能报 ${lo}`,
+      msgLobby: (lo, hi) => `开局后，炸弹藏在 ${lo}–${hi} 里`,
+      nextRound: "下一局", needTwo: "至少要 2 人", full: "座位满了", leave: "离开座位",
+      restartAsk: nm => `${nm} 想重开这一局`,
+      restartYes: "重开", restartNo: "接着玩",
+      restartMine: "你提议了重开，等其他人同意。", restartCancel: "撤回",
+      howtoShared: "每个人用自己的手机玩。轮流报一个<b>可报范围</b>里的数，轮到谁，谁的手机才能报。没踩中，范围就缩到炸弹那一边；<b>踩中炸弹的人输</b>，下一局由他先报。",
+      setShared: "入座的玩家可以在两局之间改，下一局生效。",
+      setLocked: "这局进行中，改不了，等这局结束再改。",
+      setWatch: "只有入座的玩家能改。",
+      rangeNext: x => `下一局用 1–${x}。`,
+      rulesShared0: ["人数：", "2–8 人，每人用自己的手机。先点「加入」，入座的人谁都能点「开始」。按入座的先后轮流，座位灯亮着的就是该报数的人。"],
+      rulesNoteShared: "炸弹不会出现在任何人的屏幕上，但它跟着共享的游戏数据一起存着：聚会玩玩足够公平，别拿来赌输赢。关掉 App 也不会让出座位。",
       dares: [
         "用三种不同的语气说「我没事」",
         "学一种动物叫，让大家猜是什么",
@@ -611,6 +715,31 @@ details > div { padding-top: 10px; display: grid; gap: 10px; }
         ["コツ：", "範囲が広いうちは端のほうが安全。残り3〜4個になったら、プレッシャーは次の人へ。"]
       ],
       rulesNote: "途中で閉じても、次に開けば同じところから続きます。爆弾の数字はゲームごとのランダムなシードで決まり、ゲームと一緒に保存されます。",
+      you: "あなた", turnYou: "あなたの番", upNow: "いまの番",
+      seatedLbl: "参加", seatedOf: k => `${k} / 8人`,
+      lobbyTitle: "参加する人は？", lobbyNone: "まだ誰も座っていません",
+      join: "このゲームに参加", joinNext: "次から参加", joinQueued: "✓ 次から参加",
+      startN: k => `スタート・${k}人`,
+      hintJoin: "8人まで。見ているだけでもOK。",
+      hintNeedOne: "あと1人を待っています…",
+      hintNeedOneRound: "もう1人座ったら、すぐ始まります。",
+      hintStart: "参加した人なら誰でもスタートできます。それまでは途中参加もOK。",
+      hintFull: "8席すべて埋まっています。",
+      watching: "観戦中", waitFor: nm => `${nm}が考え中…`, youNext: "次はあなたの番",
+      queuedNote: "このゲームが終わったら席に着きます。",
+      msgOneThem: (nm, lo) => `残り1個……${nm}は${lo}を言うしかない`,
+      msgLobby: (lo, hi) => `スタートすると${lo}〜${hi}に爆弾が隠れます`,
+      nextRound: "次のゲーム", needTwo: "2人から遊べます", full: "満席", leave: "席を立つ",
+      restartAsk: nm => `${nm}がやり直しを提案中`,
+      restartYes: "やり直す", restartNo: "続ける",
+      restartMine: "やり直しを提案しました。誰かのOK待ちです。", restartCancel: "取り下げる",
+      howtoShared: "みんな自分のスマホで遊びます。順番に<b>範囲</b>の中から数字を1つ言い、入力できるのは自分の番のスマホだけ。セーフなら範囲が爆弾のほうへ狭まり、<b>爆弾の数字を言った人の負け</b>。次のゲームはその人からスタート。",
+      setShared: "参加中の人がゲームの合間に変えられます。次のゲームから反映。",
+      setLocked: "ゲーム中は変えられません。終わってから変えてください。",
+      setWatch: "変えられるのは参加中の人だけです。",
+      rangeNext: x => `次のゲームは1–${x}。`,
+      rulesShared0: ["人数：", "2〜8人、それぞれ自分のスマホで。「参加」を押して、参加した誰かが「スタート」。座った順に回り、ランプが光っている人の番です。"],
+      rulesNoteShared: "爆弾の数字はどの画面にも出ませんが、共有のゲームデータには入っています。パーティーなら十分フェア、賭けには向きません。アプリを閉じても席はそのままです。",
       dares: [
         "「全然平気」を3種類の言い方で言う",
         "動物の鳴きまねをして、何の動物か当ててもらう",
@@ -641,7 +770,30 @@ details > div { padding-top: 10px; display: grid; gap: 10px; }
 
   const $ = id => document.getElementById(id);
   const api = window.dodojo || null;
-  const save = patch => { try { const p = api?.setState?.({ v: VERSION, ...patch }); p?.catch?.(() => {}); } catch {} };
+  // Shared (a team space, a game room): each player on their own phone, seats and turns through dodojo.game,
+  // the round in "nb:" keys. Anywhere else (outside dodojo, an app without dodojo.game or `min`, a personal Note)
+  // one phone goes round the table exactly as before, with its own keys.
+  const SEATS = ["p1", "p2", "p3", "p4", "p5", "p6", "p7", "p8"];
+  const sget = () => { try { return (api && api.getState && api.getState()) || {}; } catch { return {}; } };
+  let game = null;
+  try {
+    if (api && typeof api.game === "function") {
+      game = api.game({
+        seats: SEATS, min: 2,
+        fresh: () => freshShared(),
+        // whoever blew up last starts the next round
+        first: () => { const s = sget()["nb:loser"]; return SEATS.includes(s) ? s : null; }
+      });
+    }
+  } catch { game = null; }
+  const SHARED = !!(game && game.state && game.state.shared === true && typeof game.state.min === "number");
+  // Language and sound belong to each phone; the frame's origin is opaque, so storage may refuse.
+  const LS_LANG = "number-bomb:lang", LS_SOUND = "number-bomb:sound";
+  const local = {
+    get: k => { try { return window.localStorage.getItem(k); } catch { return null; } },
+    set: (k, v) => { try { window.localStorage.setItem(k, v); } catch {} }
+  };
+  const save = patch => { if (SHARED) return; try { const p = api?.setState?.({ v: VERSION, ...patch }); p?.catch?.(() => {}); } catch {} };
   const esc = s => String(s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
   const reduceMotion = () => matchMedia("(prefers-reduced-motion: reduce)").matches;
 
@@ -661,6 +813,8 @@ details > div { padding-top: 10px; display: grid; gap: 10px; }
   let entry = "", warnMsg = null, armed = false, armTimer = 0, clearArmed = false, clearTimer = 0;
   let R = { bomb: 0, lo: 1, hi: 100, done: false, loser: -1 };
   let lang = deviceLang(), T = I18N[lang];
+  // shared mode only: the room as last read, the shared settings, and this phone's wish to sit in
+  let GS = null, setMax = 100, setDare = true, wantSeat = false, sitting = false, seen = null;
 
   const nameOf = i => (names[i] || "").trim() || T.defName(i + 1);
   const bombOf = () => Math.floor(mulberry32(seed)() * max) + 1;
@@ -716,6 +870,136 @@ details > div { padding-top: 10px; display: grid; gap: 10px; }
     }
   }
 
+  // ---------- shared mode: one phone per player ----------
+  // Keys: nb:seed / nb:max / nb:g / nb:dare / nb:dareIx = the round (written by fresh() when it starts, nb:g by each call);
+  // nb:loser = who blew up last (starts the next round); nb:loss:<seat> + nb:lossBy:<seat> = the tally, counted for
+  // whoever holds that seat; nb:rounds = booms so far; nb:set:max / nb:set:dare = settings for the next round.
+  function freshShared() {
+    const st = sget();
+    return {
+      "nb:seed": newSeed(), "nb:max": MAXES.includes(+st["nb:set:max"]) ? +st["nb:set:max"] : 100, "nb:g": "",
+      "nb:dare": st["nb:set:dare"] !== false, "nb:dareIx": Math.floor(Math.random() * 22)
+    };
+  }
+  function parseCalls(s) {
+    const out = [];
+    if (typeof s !== "string" || !s) return out;
+    for (const part of s.split(",")) {
+      const [a, b] = part.split(":").map(Number);
+      if (Number.isInteger(a) && a >= 0 && a < SEATS.length && Number.isInteger(b)) out.push([a, b]);
+    }
+    return out;
+  }
+  function loadShared() {
+    const st = sget(), gs = game.state;
+    GS = gs;
+    setMax = MAXES.includes(+st["nb:set:max"]) ? +st["nb:set:max"] : 100;
+    setDare = st["nb:set:dare"] !== false;
+    nextMax = setMax;
+    rounds = clampInt(st["nb:rounds"], 0, 1e7, 0);
+    dareIx = clampInt(st["nb:dareIx"], 0, 21, 0);
+    names = SEATS.map(s => (gs.players[s] ? gs.players[s].name : ""));
+    losses = SEATS.map(s => { const p = gs.players[s]; return p && st["nb:lossBy:" + s] === p.id ? clampInt(st["nb:loss:" + s], 0, 99999, 0) : 0; });
+    if (gs.round >= 1 && st["nb:seed"] !== undefined && st["nb:seed"] !== null) {
+      max = MAXES.includes(+st["nb:max"]) ? +st["nb:max"] : 100;
+      seed = Number(st["nb:seed"]) >>> 0;
+      dareOn = st["nb:dare"] !== false;
+      g = parseCalls(st["nb:g"]);
+    } else {
+      max = setMax; seed = 0; dareOn = setDare; g = [];
+    }
+    recompute();
+    turn = gs.turn ? SEATS.indexOf(gs.turn) : R.done ? R.loser : -1;
+  }
+  const canCall = () => !SHARED || !!(GS && GS.status === "playing" && GS.myTurn && !R.done);
+  const canSeat = () => SHARED && api.writable === true && !!GS.me && GS.mine.length === 0;
+  const canEdit = () => SHARED && api.writable === true && GS.mine.length > 0 && GS.status !== "playing";
+  // Every game call redraws once it settles; a refused one has already brought the current state.
+  const act = p => { Promise.resolve(p).catch(() => {}).then(() => onShared()); };
+  // Settings, the forfeit card and the tally change only between rounds, and never into a round that just started.
+  function writeShared(patch) {
+    const st = sget();
+    try { act(api.setState(patch, { expect: { "g:round": st["g:round"] ?? null, "g:over": st["g:over"] ?? null } })); } catch {}
+    onShared();
+  }
+  // The first empty seat; if someone takes it at the same moment, the next one. A refused sit means someone
+  // else's write landed first, so each try sees fewer empty seats; a short random pause keeps a table of
+  // people all tapping Join at once from colliding again and again.
+  async function trySit() {
+    if (sitting) return;
+    if (!canSeat()) { wantSeat = false; return; }
+    sitting = true;
+    try {
+      for (let i = 0; i < 12 && canSeat() && GS.status !== "playing"; i++) {
+        const seat = SEATS.find(s => !GS.players[s]);
+        if (!seat) { wantSeat = false; break; }
+        if (await game.sit(seat)) break;
+        await new Promise(r => setTimeout(r, 40 + Math.random() * 160 * Math.min(4, i + 1)));
+        loadShared();
+      }
+    } catch {} finally { sitting = false; }
+    if (GS.mine.length) wantSeat = false;
+    render();
+  }
+  function commitShared(v) {
+    const gs = game.state;
+    if (!gs.myTurn || gs.status !== "playing" || R.done) return;
+    const calls = [...g, [SEATS.indexOf(gs.turn), v]];
+    const patch = { "nb:g": calls.map(([s, x]) => s + ":" + x).join(",") };
+    let end;
+    if (v === R.bomb) {
+      const st = sget(), seat = gs.turn, p = gs.players[seat];
+      const before = p && st["nb:lossBy:" + seat] === p.id ? clampInt(st["nb:loss:" + seat], 0, 99999, 0) : 0;
+      Object.assign(patch, {
+        "nb:loser": seat, ["nb:loss:" + seat]: before + 1, ["nb:lossBy:" + seat]: p ? p.id : null,
+        "nb:rounds": rounds + 1, "nb:dareIx": Math.floor(Math.random() * 22)
+      });
+      end = { winner: "draw" }; // the round ends with one loser, nobody wins it
+    }
+    entry = ""; warnMsg = null; disarm();
+    act(game.move(patch, end));
+  }
+  // Every change, from this phone or another: read the room, then sound what happened.
+  function onShared() {
+    const prev = seen;
+    loadShared();
+    seen = { round: GS.round, calls: g.length, done: R.done, myTurn: GS.myTurn, status: GS.status, turn: GS.turn };
+    if (prev) {
+      if (seen.round !== prev.round || seen.calls !== prev.calls || seen.turn !== prev.turn) { entry = ""; warnMsg = null; }
+      if (seen.round !== prev.round || seen.status !== prev.status) disarm();
+      if (seen.round !== prev.round) {
+        $("device").classList.remove("boom");
+        clearTimeout(tickTimer);
+        if (seen.status === "playing" && audio && soundOn) { tone(520, 0, 0.08, 0.06, "square"); tone(780, 0.07, 0.1, 0.05, "square"); }
+      } else if (seen.calls > prev.calls) {
+        if (R.done && !prev.done) { boomFx(); clearTimeout(tickTimer); }
+        else if (!R.done) {
+          const by = SEATS[g[g.length - 1][0]], mineCall = GS.mine.includes(by);
+          if (mineCall) safeSound(); else if (GS.myTurn) turnChime(); else click(2600, 0.05);
+          if (lastOne() && (mineCall || GS.myTurn)) heart();
+        }
+      }
+      if (GS.myTurn && !prev.myTurn) touched();
+    }
+    if (GS.mine.length) wantSeat = false;
+    render(); scheduleTick();
+    if (wantSeat && !sitting && GS.status !== "playing") trySit();
+  }
+  function sharedMain() {
+    const gs = GS;
+    if (gs.status === "playing" && !R.done) {
+      if (gs.mine.length) {
+        if (gs.restartBy) return;
+        if (!armed) { armed = true; render(); clearTimeout(armTimer); armTimer = setTimeout(() => { armed = false; render(); }, 3000); return; }
+        disarm(); act(game.restart());
+      } else if (canSeat()) { wantSeat = !wantSeat; click(2400); render(); }
+      return;
+    }
+    if (gs.status === "seating") return;
+    if (gs.mine.length) { if (gs.seated.length >= 2) act(game.restart()); return; }
+    if (canSeat()) { wantSeat = true; trySit(); }
+  }
+
   // ---------- sound (Web Audio, made on first tap) ----------
   let audio = null, noise = null, longNoise = null;
   function startAudio() {
@@ -747,6 +1031,7 @@ details > div { padding-top: 10px; display: grid; gap: 10px; }
     o.connect(env(a, t, vol, len)); o.start(t); o.stop(t + len + 0.02);
   }
   function safeSound() { if (!audio || !soundOn) return; tone(660, 0.0, 0.09, 0.09, "square"); tone(990, 0.08, 0.12, 0.07, "square"); }
+  function turnChime() { if (!audio || !soundOn) return; tone(523, 0, 0.07, 0.07, "square"); tone(659, 0.07, 0.07, 0.07, "square"); tone(784, 0.14, 0.14, 0.07, "square"); }
   function buzz() { if (!audio || !soundOn) return; tone(118, 0, 0.18, 0.11, "sawtooth"); tone(112, 0.02, 0.16, 0.06, "square"); }
   function tick() { click(5200, 0.06); }
   function heart() {
@@ -774,6 +1059,7 @@ details > div { padding-top: 10px; display: grid; gap: 10px; }
   function scheduleTick() {
     clearTimeout(tickTimer);
     if (!audio || !soundOn || R.done || document.hidden || !g.length || performance.now() - lastInputAt > 25000) return;
+    if (SHARED && !(GS && GS.myTurn)) return; // the ticking follows the bomb: only the phone whose turn it is
     const left = R.hi - R.lo + 1;
     const f = Math.log(left) / Math.log(max);
     const iv = left <= 5 ? 360 : 300 + 800 * Math.max(0, Math.min(1, f));
@@ -798,20 +1084,26 @@ details > div { padding-top: 10px; display: grid; gap: 10px; }
   // ---------- actions ----------
   const lastOne = () => !R.done && R.lo === R.hi;
   function input(d) {
-    startAudio(); touched();
+    startAudio();
+    if (!canCall()) return;
+    touched();
     if (R.done || lastOne()) { nudge(); return; }
     warnMsg = null;
     if (entry.length >= String(max).length || (entry === "" && d === "0")) { nudge(); click(1800); render(); return; }
     entry += d; click(); render();
   }
   function back() {
-    startAudio(); touched();
+    startAudio();
+    if (!canCall()) return;
+    touched();
     if (R.done || lastOne()) return;
     entry = entry.slice(0, -1); warnMsg = null; click(1900); render();
   }
   function warn(kind) { warnMsg = kind; buzz(); nudge(); render(); }
   function enter() {
-    startAudio(); touched();
+    startAudio();
+    if (!canCall()) return;
+    touched();
     if (R.done) { nudge(); return; }
     if (lastOne()) { commit(R.lo); return; }
     if (!entry) { warn({ k: "empty" }); return; }
@@ -820,6 +1112,7 @@ details > div { padding-top: 10px; display: grid; gap: 10px; }
     commit(v);
   }
   function commit(v) {
+    if (SHARED) { commitShared(v); return; }
     const who = turn;
     g.push([who, v]); entry = ""; warnMsg = null; disarm();
     recompute();
@@ -846,6 +1139,7 @@ details > div { padding-top: 10px; display: grid; gap: 10px; }
   }
   function disarm() { armed = false; clearTimeout(armTimer); }
   function setN(k) {
+    if (SHARED) return;
     startAudio();
     const m = Math.min(10, Math.max(2, k));
     if (m === n) { nudge(); return; }
@@ -859,7 +1153,7 @@ details > div { padding-top: 10px; display: grid; gap: 10px; }
     lang = l; T = I18N[l];
     document.documentElement.lang = T.html;
     document.title = T.title;
-    if (persist) { chosenLang = l; save({ lang: l }); }
+    if (persist) { chosenLang = l; if (SHARED) local.set(LS_LANG, l); else save({ lang: l }); }
     applyStatic(); render(); renderNames(true);
   }
 
@@ -869,15 +1163,17 @@ details > div { padding-top: 10px; display: grid; gap: 10px; }
     document.querySelectorAll("[data-i18n-html]").forEach(el => { const v = T[el.dataset.i18nHtml]; if (typeof v === "string") el.innerHTML = v; });
     document.querySelectorAll("[data-i18n-aria]").forEach(el => { const v = T[el.dataset.i18nAria]; if (typeof v === "string") el.setAttribute("aria-label", v); });
     document.querySelector(".game").setAttribute("aria-label", T.title);
-    $("rules").innerHTML = T.rules.map(([b, t]) => `<li><b>${b}</b>${lang === "en" ? " " : ""}${t}</li>`).join("");
+    $("rules").innerHTML = (SHARED ? [T.rulesShared0, ...T.rules.slice(1)] : T.rules).map(([b, t]) => `<li><b>${b}</b>${lang === "en" ? " " : ""}${t}</li>`).join("");
+    if (SHARED) { $("howto").innerHTML = T.howtoShared; $("rulesNote").textContent = T.rulesNoteShared; }
     document.querySelectorAll(".langs button").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.lang === lang)));
     $("tape").dataset.v = "";
   }
 
   function message() {
+    if (SHARED && GS.status === "seating") return [T.msgLobby(1, max), ""];
     if (R.done) return [T.msgDone(nameOf(R.loser), R.bomb), "hot"];
     if (warnMsg) return [warnMsg.k === "empty" ? T.msgEmpty : T.msgRange(warnMsg.lo, warnMsg.hi), "warn"];
-    if (lastOne()) return [T.msgOne(R.lo), "hot"];
+    if (lastOne()) return [canCall() ? T.msgOne(R.lo) : T.msgOneThem(nameOf(turn), R.lo), "hot"];
     if (g.length) { const [s, v] = g[g.length - 1]; return [T.msgSafe(nameOf(s), v, v > R.bomb), ""]; }
     return [T.msgStart(nameOf(turn), R.lo, R.hi), ""];
   }
@@ -890,10 +1186,19 @@ details > div { padding-top: 10px; display: grid; gap: 10px; }
 
     // status
     const seat = R.done ? R.loser : turn;
-    $("whoLamp").style.setProperty("--c", COLORS[seat] || COLORS[0]);
-    $("whoLamp").textContent = seat + 1;
-    $("whoLabel").textContent = R.done ? T.out : g.length === 0 ? T.start : T.turn;
-    $("whoName").textContent = nameOf(seat);
+    const lobby = SHARED && GS.status === "seating", live = canCall();
+    if (lobby) {
+      const k = GS.seated.length;
+      $("whoLamp").style.setProperty("--c", COLORS[9]);
+      $("whoLamp").textContent = k;
+      $("whoLabel").textContent = T.seatedLbl;
+      $("whoName").textContent = T.seatedOf(k);
+    } else {
+      $("whoLamp").style.setProperty("--c", COLORS[seat] || COLORS[0]);
+      $("whoLamp").textContent = seat + 1;
+      $("whoLabel").textContent = R.done ? T.out : SHARED ? (GS.myTurn ? T.turnYou : g.length === 0 ? T.start : T.upNow) : g.length === 0 ? T.start : T.turn;
+      $("whoName").textContent = nameOf(seat);
+    }
     if (R.done) { $("leftLabel").textContent = T.bombPre; $("leftNum").textContent = R.bomb; $("leftUnit").textContent = ""; }
     else { $("leftLabel").textContent = left === 1 ? T.leftPreOne : T.leftPre; $("leftNum").textContent = left; $("leftUnit").textContent = T.leftUnit; }
     $("leftLabel").hidden = !$("leftLabel").textContent;
@@ -901,13 +1206,20 @@ details > div { padding-top: 10px; display: grid; gap: 10px; }
 
     // lamps
     let lamps = "";
-    for (let i = 0; i < n; i++) lamps += `<span class="lamp${i === seat ? " on" : ""}${R.done && i === seat ? " hit" : ""}" style="--c:${COLORS[i]}">${i + 1}</span>`;
+    if (SHARED) {
+      // the lobby shows all eight seats filling up; a round shows the seats taken, in turn order
+      const list = lobby ? SEATS.map((s, i) => i) : GS.seated.map(s => SEATS.indexOf(s));
+      for (const i of list) {
+        const on = lobby ? !!GS.players[SEATS[i]] : i === seat;
+        lamps += `<span class="lamp${on ? " on" : ""}${R.done && i === seat ? " hit" : ""}" style="--c:${COLORS[i]}">${i + 1}</span>`;
+      }
+    } else for (let i = 0; i < n; i++) lamps += `<span class="lamp${i === seat ? " on" : ""}${R.done && i === seat ? " hit" : ""}" style="--c:${COLORS[i]}">${i + 1}</span>`;
     $("lamps").innerHTML = lamps;
 
-    // readout
+    // readout: a phone that is waiting shows the last number called
     showDigits($("rLo"), R.done ? R.bomb : R.lo, D);
     showDigits($("rHi"), R.done ? R.bomb : R.hi, D);
-    showDigits($("bigDigits"), R.done ? R.bomb : lastOne() ? R.lo : entry, D);
+    showDigits($("bigDigits"), R.done ? R.bomb : lastOne() ? R.lo : !live && g.length ? g[g.length - 1][1] : entry, D);
     $("glass").classList.toggle("blink", R.done || lastOne());
 
     const [m, cls] = message();
@@ -933,9 +1245,9 @@ details > div { padding-top: 10px; display: grid; gap: 10px; }
 
     // keypad
     const lone = lastOne();
-    $("pad").querySelectorAll(".k").forEach(b => { b.disabled = R.done || (lone && b.dataset.k !== "ok"); });
+    $("pad").querySelectorAll(".k").forEach(b => { b.disabled = R.done || !live || (lone && b.dataset.k !== "ok"); });
     $("okKey").textContent = lone ? T.okOne : T.ok;
-    $("okKey").classList.toggle("pulse", lone);
+    $("okKey").classList.toggle("pulse", lone && live);
 
     // banner
     $("banner").hidden = !R.done;
@@ -946,12 +1258,18 @@ details > div { padding-top: 10px; display: grid; gap: 10px; }
       $("bLine2").textContent = T.line2(nm, times);
       $("dare").hidden = !dareOn;
       $("dareText").textContent = T.dares[dareIx] || T.dares[0];
+      $("dareNext").hidden = SHARED && !(GS.mine.length && api.writable === true);
     }
+    $("case").classList.toggle("lobby-on", lobby);
+    if (SHARED) renderLayers(lobby, live);
 
     // controls
     const nb = $("newBtn");
-    nb.textContent = R.done ? T.again : armed ? T.arm : T.restart;
-    nb.className = "btn" + (R.done ? " primary" : armed ? " arm" : "");
+    if (SHARED) renderSharedControls();
+    else {
+      nb.textContent = R.done ? T.again : armed ? T.arm : T.restart;
+      nb.className = "btn" + (R.done ? " primary" : armed ? " arm" : "");
+    }
     $("countNum").textContent = n;
     $("countWord").textContent = " " + T.players(n);
     $("minus").disabled = n <= 2; $("plus").disabled = n >= 10;
@@ -959,14 +1277,108 @@ details > div { padding-top: 10px; display: grid; gap: 10px; }
     $("soundBtn").setAttribute("aria-label", soundOn ? T.soundOn : T.soundOff);
 
     // settings
-    document.querySelectorAll('input[name="range"]').forEach(r => { r.checked = Number(r.value) === nextMax; });
-    $("rangeNote").textContent = nextMax !== max ? T.rangePending(max, nextMax) : T.rangeNote;
-    $("dareToggle").checked = dareOn;
+    document.querySelectorAll('input[name="range"]').forEach(r => { r.checked = Number(r.value) === nextMax; r.disabled = SHARED && !canEdit(); });
+    if (SHARED) {
+      const base = !GS.mine.length ? T.setWatch : GS.status === "playing" ? T.setLocked : T.setShared;
+      $("rangeNote").textContent = GS.round >= 1 && setMax !== max ? base + " " + T.rangeNext(setMax) : base;
+      $("dareToggle").checked = setDare;
+      $("dareToggle").disabled = !canEdit();
+    } else {
+      $("rangeNote").textContent = nextMax !== max ? T.rangePending(max, nextMax) : T.rangeNote;
+      $("dareToggle").checked = dareOn;
+    }
 
     renderBoard();
   }
 
+  // The lobby (who has sat down, Join / Start) and the card over the keypad of a phone that is waiting.
+  function renderLayers(lobby, live) {
+    const gs = GS, mine = gs.mine.length > 0;
+    $("lobby").hidden = !lobby;
+    if (lobby) {
+      $("roster").innerHTML = gs.seated.length
+        ? gs.seated.map(s => {
+            const i = SEATS.indexOf(s), me = gs.mine.includes(s);
+            return `<span class="chip${me ? " me" : ""}"><span class="lamp" style="--c:${COLORS[i]}">${i + 1}</span><span class="nm">${esc(nameOf(i))}</span>${me ? `<small>${esc(T.you)}</small>` : ""}</span>`;
+          }).join("")
+        : `<span class="none">${esc(T.lobbyNone)}</span>`;
+      const empty = SEATS.some(s => !gs.players[s]);
+      let label = "", hint = "", what = "";
+      if (!mine) {
+        if (canSeat() && empty) { label = T.join; what = "join"; hint = T.hintJoin; }
+        else hint = empty ? T.watching : T.hintFull;
+      } else if (gs.canStart) { label = T.startN(gs.seated.length); what = "start"; hint = T.hintStart; }
+      else hint = gs.round >= 1 ? T.hintNeedOneRound : T.hintNeedOne;
+      const b = $("lobbyBtn");
+      b.hidden = !what; b.textContent = label; b.dataset.act = what;
+      $("lobbyHint").textContent = hint;
+    }
+    const playing = gs.status === "playing" && !R.done;
+    const ask = playing && !!gs.restartBy && mine;
+    const show = playing && (!live || ask);
+    $("wait").hidden = !show;
+    if (!show) return;
+    const l1 = $("waitLine1"), l2 = $("waitLine2"), yes = $("askYes"), no = $("askNo");
+    if (ask) {
+      const asker = SEATS.indexOf(gs.restartBy), mineAsk = gs.mine.includes(gs.restartBy);
+      l1.hidden = true;
+      l2.textContent = mineAsk ? T.restartMine : T.restartAsk(nameOf(asker));
+      l2.className = "wline2 ask";
+      l2.hidden = false;
+      $("waitBtns").hidden = false;
+      yes.hidden = mineAsk; yes.textContent = T.restartYes;
+      no.textContent = mineAsk ? T.restartCancel : T.restartNo;
+      return;
+    }
+    l1.hidden = false;
+    l1.innerHTML = `<span class="lamp" style="--c:${COLORS[turn] || COLORS[0]}">${turn + 1}</span><span>${esc(T.waitFor(nameOf(turn)))}</span>`;
+    const order = gs.seated, next = order[(order.indexOf(gs.turn) + 1) % order.length];
+    let line = "", you = false;
+    if (!mine) line = wantSeat ? T.queuedNote : T.watching;
+    else if (gs.mine.includes(next)) { line = T.youNext; you = true; }
+    l2.textContent = line;
+    l2.className = "wline2" + (you ? " you" : "");
+    l2.hidden = !line;
+    $("waitBtns").hidden = true;
+  }
+
+  // Under the box: Restart (asks the others) during a round, Next round after a boom, Join for whoever is watching.
+  function renderSharedControls() {
+    const gs = GS, nb = $("newBtn"), mine = gs.mine.length > 0;
+    let label = "", cls = "btn", show = true, off = false;
+    if (gs.status === "seating") show = false;
+    else if (gs.status === "playing" && !R.done) {
+      if (mine) { label = armed ? T.arm : T.restart; cls += armed ? " arm" : ""; off = !!gs.restartBy; }
+      else if (canSeat()) { label = wantSeat ? T.joinQueued : T.joinNext; cls += wantSeat ? "" : " primary"; }
+      else show = false;
+    } else if (mine) {
+      const two = gs.seated.length >= 2;
+      label = two ? T.nextRound : T.needTwo; off = !two; cls += " primary";
+    } else if (canSeat()) {
+      const empty = SEATS.some(s => !gs.players[s]);
+      label = empty ? T.joinNext : T.full; off = !empty; cls += " primary";
+    } else show = false;
+    nb.hidden = !show; nb.textContent = label; nb.className = cls; nb.disabled = off;
+    const lv = $("leaveBtn");
+    lv.hidden = !(mine && gs.status !== "playing" && api.writable === true);
+    lv.textContent = T.leave;
+  }
+
   function renderBoard() {
+    if (SHARED) {
+      // whoever is seated now; a seat's count belongs to the person who blew up in it
+      const list = GS.seated.map(s => SEATS.indexOf(s)).sort((a, b) => (losses[b] || 0) - (losses[a] || 0) || a - b);
+      const top = Math.max(1, ...list.map(i => losses[i] || 0)), most = Math.max(0, ...list.map(i => losses[i] || 0));
+      $("boardList").innerHTML = list.map(i => {
+        const c = losses[i] || 0, me = GS.mine.includes(SEATS[i]);
+        return `<li${me ? ' class="me"' : ""}><span class="lamp" style="--c:${COLORS[i]}">${i + 1}</span><span class="nm">${esc(nameOf(i))}${me ? `<span class="sr"> (${esc(T.you)})</span>` : ""}</span><span class="bar"><span style="transform:scaleX(${c / top})"></span></span><span class="cnt">${esc(T.cnt(c))}${c > 0 && c === most ? `<span class="tag">${esc(T.most)}</span>` : ""}</span></li>`;
+      }).join("");
+      $("roundsInfo").textContent = T.rounds(rounds);
+      const cb = $("clearBtn");
+      cb.hidden = !GS.mine.length; cb.disabled = !canEdit();
+      cb.textContent = clearArmed ? T.clearArm : T.clear;
+      return;
+    }
     const seats = Array.from({ length: n }, (_, i) => i).sort((a, b) => (losses[b] || 0) - (losses[a] || 0) || a - b);
     const top = Math.max(1, ...seats.map(i => losses[i] || 0));
     const most = Math.max(...seats.map(i => losses[i] || 0));
@@ -1007,6 +1419,7 @@ details > div { padding-top: 10px; display: grid; gap: 10px; }
 
   $("newBtn").addEventListener("click", () => {
     startAudio();
+    if (SHARED) { sharedMain(); return; }
     if (R.done || g.length === 0 || armed) { newRound(); return; }
     armed = true; render();
     clearTimeout(armTimer); armTimer = setTimeout(() => { armed = false; render(); }, 3000);
@@ -1014,38 +1427,78 @@ details > div { padding-top: 10px; display: grid; gap: 10px; }
   $("minus").addEventListener("click", () => setN(n - 1));
   $("plus").addEventListener("click", () => setN(n + 1));
   $("soundBtn").addEventListener("click", () => {
-    soundOn = !soundOn; save({ sound: soundOn });
+    soundOn = !soundOn;
+    if (SHARED) local.set(LS_SOUND, soundOn ? "1" : "0"); else save({ sound: soundOn });
     if (soundOn) { startAudio(); click(2600); touched(); } else clearTimeout(tickTimer);
     render();
   });
   document.querySelectorAll(".langs button").forEach(b => b.addEventListener("click", () => { if (b.dataset.lang !== lang || chosenLang !== lang) setLang(b.dataset.lang, true); }));
   $("dareNext").addEventListener("click", () => {
     startAudio();
+    if (SHARED) {
+      if (GS.mine.length && GS.status !== "playing") { writeShared({ "nb:dareIx": (dareIx + 1 + Math.floor(Math.random() * 21)) % 22 }); click(2600); }
+      return;
+    }
     dareIx = (dareIx + 1 + Math.floor(Math.random() * 21)) % 22;
     save({ dareIx }); click(2600); render();
   });
   $("clearBtn").addEventListener("click", () => {
+    if (SHARED && !canEdit()) return;
     if (!clearArmed) { clearArmed = true; renderBoard(); clearTimeout(clearTimer); clearTimer = setTimeout(() => { clearArmed = false; renderBoard(); }, 3000); return; }
     clearArmed = false; clearTimeout(clearTimer);
+    if (SHARED) {
+      const patch = { "nb:rounds": 0 };
+      SEATS.forEach(s => { patch["nb:loss:" + s] = null; patch["nb:lossBy:" + s] = null; });
+      writeShared(patch); return;
+    }
     losses = Array(10).fill(0); rounds = 0;
     save({ losses: losses.join(","), rounds }); render();
   });
   document.querySelectorAll('input[name="range"]').forEach(r => r.addEventListener("change", () => {
     if (!r.checked) return;
+    if (SHARED) { if (canEdit()) writeShared({ "nb:set:max": Number(r.value) }); else render(); return; }
     nextMax = Number(r.value);
     if (!R.done && g.length === 0) { max = nextMax; seed = newSeed(); entry = ""; recompute(); save({ ...roundPatch(), nextMax }); }
     else save({ nextMax });
     render();
   }));
-  $("dareToggle").addEventListener("change", e => { dareOn = e.target.checked; save({ dare: dareOn }); render(); });
+  $("dareToggle").addEventListener("change", e => {
+    if (SHARED) { if (canEdit()) writeShared({ "nb:set:dare": e.target.checked }); else render(); return; }
+    dareOn = e.target.checked; save({ dare: dareOn }); render();
+  });
   let nameTimer = 0;
   $("names").addEventListener("input", e => {
-    const i = Number(e.target.dataset.i); if (!Number.isInteger(i)) return;
+    const i = Number(e.target.dataset.i); if (SHARED || !Number.isInteger(i)) return;
     names[i] = e.target.value.replace(/\|/g, "").trim();
     while (names.length < 10) names.push("");
     clearTimeout(nameTimer); nameTimer = setTimeout(() => save({ names: names.slice(0, 10).join("|") }), 300);
     render();
   });
+
+  $("lobbyBtn").addEventListener("click", e => {
+    startAudio();
+    const what = e.currentTarget.dataset.act;
+    if (what === "join") { wantSeat = true; trySit(); }
+    else if (what === "start") act(game.start());
+  });
+  $("askYes").addEventListener("click", () => act(game.answerRestart(true)));
+  $("askNo").addEventListener("click", () => act(game.answerRestart(false)));
+  $("leaveBtn").addEventListener("click", () => { wantSeat = false; act(game.leave()); });
+
+  if (SHARED) {
+    // the seats, turns and round come from the room; language and sound stay with this phone
+    document.documentElement.classList.add("shared");
+    $("namesBox").hidden = true;
+    document.querySelector(".stepper").hidden = true;
+    const l = local.get(LS_LANG);
+    if (LANGS.includes(l)) chosenLang = l;
+    if (local.get(LS_SOUND) === "0") soundOn = false;
+    document.addEventListener("pointerdown", () => startAudio(), { capture: true, passive: true });
+    onShared();
+    setLang(chosenLang || deviceLang(), false);
+    game.onChange(onShared);
+    return;
+  }
 
   let initial = {};
   try { initial = api?.getState?.() || {}; } catch {}

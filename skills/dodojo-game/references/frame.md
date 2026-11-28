@@ -154,10 +154,19 @@ body { margin: 0; padding: 16px; background: var(--paper); color: var(--ink);
   so and redraw); `onChange(listener)` follows every change. Write the game's
   own values only through these calls, draw from `game.state`, and say on the
   page whose turn it is, who is waiting for a seat and who asked to restart.
-  In a team space each player plays from their own device, the last seat
-  taken starts the first round, and closing the app does not leave the game;
+  In a team space, or a game room friends join by typing its code in the
+  dodojo app, each player plays from their own device, the last seat taken
+  starts the first round, and closing the app does not leave the game;
   elsewhere one device plays every seat. When `dodojo.game` is missing (an
   older app, or outside dodojo), the game is played on one device.
+  A party game for however many come passes `min`:
+  `dodojo.game({ seats: ["p1", …, "p8"], min: 2, … })` (at most 8 seats).
+  Then `game.state.seated` lists the seats taken, `ready` says enough have
+  sat, `canStart` says this person may start, and `start()` begins the round
+  for those seated; turns go round the seats taken, and someone who arrives
+  mid-round sits for the next round. An app whose `game.state.min` is
+  undefined predates this: play on one device there. Keep a per-device
+  choice (language, sound) out of shared state.
   In detail, as the runtime does it:
   ```js
   game.state === {
